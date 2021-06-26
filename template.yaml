@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM template - send notifications for running ec2 instances
+Parameters:
+  SlackWebhookURL:
+    Type: String
+    Description: Slack webhook url for sending notifications
+Resources:
+  monitorEC2InstancesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: This function will monitor all EC2 instances on a schedule and send a slack notification when any are found running.
+      Handler: src/monitor-ec2-instances.lambda_handler
+      Runtime: python3.7
+      Timeout: 300
+      Events:
+        CloudWatchEventsSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: "cron(0 18 * * ? *)"
+            Name: CheckForRunningEC2Instances
+            Description: Check for running ec2 instances
+            Enabled: True
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - EC2DescribePolicy: {}
+      Environment:
+        Variables:
+          SLACK_WEBHOOK_URL: !Ref SlackWebhookURL
