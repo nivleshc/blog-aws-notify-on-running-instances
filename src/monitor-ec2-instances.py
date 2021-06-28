@@ -15,9 +15,15 @@ def send_slack_message(slack_webhook_url, slack_message):
   response_json = response.text  # convert to json for easy handling
   print('>send_slack_message:response after posting to slack:'+str(response_json))
 
+def _get_regions():
+    client = boto3.client("ec2")
+    get_regions = client.describe_regions()
+    regions = [region['RegionName'] for region in get_regions['Regions']]
+
+    return regions
+
 def find_running_ec2instances():
-  regions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ap-south-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-northeast-3',
-             'ap-southeast-1', 'ap-southeast-2', 'ca-central-1', 'eu-central-1', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'sa-east-1']
+  regions = _get_regions()
 
   notification_message = 'The following EC2 instance(s) are currently running and are costing you money. Turn them off if you have finished using them: \n'
   slack_webhook_url = os.environ['SLACK_WEBHOOK_URL']
