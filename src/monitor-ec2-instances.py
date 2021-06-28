@@ -12,7 +12,7 @@ def send_slack_message(slack_webhook_url, slack_message):
 
   print('>send_slack_message:posting message to slack channel')
   response = requests.post(slack_webhook_url, json.dumps(slack_payload))
-  response_json = response.text  # convert to json for easy handling
+  response_json = response.text
   print('>send_slack_message:response after posting to slack:'+str(response_json))
 
 def _get_regions():
@@ -80,10 +80,11 @@ def find_running_ec2instances():
     print('>find_running_ec2instances:Number of running ec2-instances[' + region + ']:'+str(num_running_ec2_instances))
 
   print('>find_running_ec2instances:Total number of running ec2_instances[all regions]:'+str(total_running_ec2_instances))
-  print('>find_running_ec2instances:Slack notification message:' + notification_message)
+  
   if total_running_ec2_instances > 0:
+      print('>find_running_ec2instances:Slack notification message:' + notification_message)
       send_slack_message(slack_webhook_url, notification_message)
-
+      
   return total_running_ec2_instances
 
 
@@ -91,5 +92,5 @@ def lambda_handler(event, context):
   num_running_instances = find_running_ec2instances()
   return {
       'statusCode': 200,
-      'body': json.dumps('Number of EC2 instances currently running in all regions:' + str(num_running_instances))
+      'body': json.dumps('Number of EC2 instances currently running [all regions]:' + str(num_running_instances))
   }

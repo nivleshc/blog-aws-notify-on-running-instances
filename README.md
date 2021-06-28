@@ -1,6 +1,8 @@
 # blog-aws-notify-on-running-instances
 
-This repository contains code for monitoring AWS EC2 instances and sending slack notifications when any running instances are found.
+This repository contains code for monitoring AWS EC2 instances in all AWS Regions. It sends a slack notification when any running AWS EC2 instances are found.
+
+Full writeup for this repository is available at https://nivleshc.wordpress.com/2021/06/27/use-aws-lambda-to-send-slack-notifications-for-running-amazon-ec2-instances/
 
 ## Prerequisites
 Before running the commands, export the following environment variables
